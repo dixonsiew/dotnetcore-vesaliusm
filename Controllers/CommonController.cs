@@ -19,6 +19,12 @@ namespace vesalius_m.Controllers
             asv = new AppService(con);
         }
 
+        [HttpGet("app/hospital-profile")]
+        public async Task<List<HospitalProfile>> GetAppHospitalProfile()
+        {
+            return await asv.FindAllAppHospitalProfileAsync();
+        }
+
         [HttpGet("app/version")]
         public async Task<List<AppVersion>> GetAppVersion()
         {

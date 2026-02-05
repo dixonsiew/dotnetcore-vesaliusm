@@ -10,7 +10,7 @@
             return q.Select(o => new CountryTelCode
             {
                 CountryName = o.COUNTRY_NAME,
-                TelCode = o.TEL_CODE
+                TelCode = o.TEL_CODE,
             });
         }
     }

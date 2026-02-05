@@ -11,7 +11,7 @@ namespace vesalius_m.Models
         {
             return q.Select(o => new Nationality
             {
-                Nationalityx = o.NATIONALITY
+                Nationalityx = o.NATIONALITY,
             });
         }
     }

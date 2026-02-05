@@ -13,6 +13,14 @@ namespace vesalius_m.Services
             conn = con;
         }
 
+        public async Task<List<HospitalProfile>> FindAllAppHospitalProfileAsync()
+        {
+            List<HospitalProfile> lx = new List<HospitalProfile>();
+            var q = await conn.QueryAsync(@"SELECT * FROM HOSPITAL_PROFILE");
+            lx = HospitalProfile.GetQ(q).ToList();
+            return lx;
+        }
+
         public async Task<List<AppVersion>> FindAllAppVersionAsync()
         {
             List<AppVersion> lx = new List<AppVersion>();
