@@ -21,8 +21,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IDbConnection>(x => new OracleConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
-string basePath = "vesm";
 
+string basePath = "vesm";
 app.UsePathBase($"/{basePath}");
 app.UseCors();
 
