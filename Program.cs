@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
 using System.Text;
+using vesalius_m.Services;
 using vesalius_m.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 builder.Services.AddScoped<DefaultConnection>();
+AddServices(builder.Services);
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -132,3 +134,9 @@ app.UseSwaggerUI(c =>
 app.MapControllers();
 
 app.Run();
+
+void AddServices(IServiceCollection services)
+{
+    services.AddScoped<AppService>();
+    services.AddScoped<CountryService>();
+}
