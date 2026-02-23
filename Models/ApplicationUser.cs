@@ -48,7 +48,7 @@ namespace vesalius_m.Models
         public string? SessionId { get; set; }
         public string? RegisterDateExcel { get; set; }
 
-        public static IEnumerable<ApplicationUserFamily> GetFamilyMemberQ(IEnumerable<dynamic> q)
+        public static List<ApplicationUserFamily> ListUserFamily(IEnumerable<dynamic> q)
         {
             return q.Select(o => new ApplicationUserFamily
             {
@@ -71,10 +71,10 @@ namespace vesalius_m.Models
                 Email = "-",
                 IsKidsExplorer = o.IS_KIDS_EXPLORER == "Y" ? true : false,
                 IsGoldenPearl = o.IS_GOLDEN_PEARL == "Y" ? true : false,
-            });
+            }).ToList();
         }
 
-        public static IEnumerable<ApplicationUser> GetQ(IEnumerable<dynamic> q)
+        public static List<ApplicationUser> List(IEnumerable<dynamic> q)
         {
             return q.Select(o => new ApplicationUser
             {
@@ -112,7 +112,7 @@ namespace vesalius_m.Models
                 Inactive = o.INACTIVE_FLAG,
                 SessionId = o.SESSION_ID,
                 SignInType = o.SIGN_IN_TYPE,
-            });
+            }).ToList();
         }
 
 

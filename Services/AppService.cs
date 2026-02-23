@@ -1,32 +1,52 @@
 ﻿using Dapper;
-using System.Data;
 using vesalius_m.Models;
+using vesalius_m.Utils;
 
 namespace vesalius_m.Services
 {
     public class AppService
     {
-        private readonly IDbConnection conn;
+        private readonly DefaultConnection ctx;
+        private readonly ILogger<AppService> logger;
 
-        public AppService(IDbConnection con)
+        public AppService(DefaultConnection c, ILogger<AppService> log)
         {
-            conn = con;
+            ctx = c;
+            logger = log;
         }
 
         public async Task<List<HospitalProfile>> FindAllAppHospitalProfileAsync()
         {
-            List<HospitalProfile> lx = new List<HospitalProfile>();
-            var q = await conn.QueryAsync(@"SELECT * FROM HOSPITAL_PROFILE");
-            lx = HospitalProfile.GetQ(q).ToList();
-            return lx;
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                var q = await conn.QueryAsync(@"SELECT * FROM HOSPITAL_PROFILE");
+                var lx = HospitalProfile.List(q);
+                return lx;
+            }
+
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error finding all hospital profiles");
+                throw;
+            }
         }
 
         public async Task<List<AppVersion>> FindAllAppVersionAsync()
         {
-            List<AppVersion> lx = new List<AppVersion>();
-            var q = await conn.QueryAsync(@"SELECT * FROM APP_VERSION");
-            lx = AppVersion.GetQ(q).ToList();
-            return lx;
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                var q = await conn.QueryAsync(@"SELECT * FROM APP_VERSION");
+                var lx = AppVersion.List(q);
+                return lx;
+            }
+
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error finding all app versions");
+                throw;
+            }
         }
     }
 }

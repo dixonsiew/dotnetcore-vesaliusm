@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using vesalius_m.Models;
 using vesalius_m.Services;
 
@@ -10,13 +8,13 @@ namespace vesalius_m.Controllers
     [ApiController]
     public class CommonController : ControllerBase
     {
-        private CountryService cs;
-        private AppService asv;
+        private readonly CountryService cs;
+        private readonly AppService asv;
 
-        public CommonController(IDbConnection con)
+        public CommonController(ILogger<CommonController> logger, CountryService countryService, AppService appService)
         {
-            cs = new CountryService(con);
-            asv = new AppService(con);
+            cs = countryService;
+            asv = appService;
         }
 
         [HttpGet("app/hospital-profile")]

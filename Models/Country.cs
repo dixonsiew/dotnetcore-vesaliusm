@@ -6,14 +6,14 @@
         public required string TelCode { get; set; }
         public required string CountryCode { get; set; }
 
-        public static IEnumerable<Country> GetQ(IEnumerable<dynamic> q)
+        public static List<Country> List(IEnumerable<dynamic> q)
         {
             return q.Select(o => new Country
             {
                 CountryName = o.COUNTRY_NAME,
                 TelCode = o.TEL_CODE,
                 CountryCode = o.COUNTRY_CODE,
-            });
+            }).ToList();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace vesalius_m.Models
         public bool IsKidsExplorer { get; set; }
         public bool IsGoldenPearl { get; set; }
 
-        public static IEnumerable<ApplicationUserFamily> GetQ(IEnumerable<dynamic> q)
+        public static List<ApplicationUserFamily> List(IEnumerable<dynamic> q)
         {
             return q.Select(o => new ApplicationUserFamily
             {
@@ -52,7 +52,7 @@ namespace vesalius_m.Models
                 Email = o.EMAIL == null ? "-" : o.EMAIL,
                 IsKidsExplorer = o.IS_KIDS_EXPLORER == "Y" ? true : false,
                 IsGoldenPearl = o.IS_GOLDEN_PEARL == "Y" ? true : false,
-            });
+            }).ToList();
         }
     }
 }
