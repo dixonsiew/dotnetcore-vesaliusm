@@ -8,43 +8,101 @@ namespace vesalius_m.Controllers
     [ApiController]
     public class CommonController : ControllerBase
     {
-        private readonly CountryService cs;
-        private readonly AppService asv;
+        private readonly CountryService countryService;
+        private readonly AppService appService;
+        private readonly ILogger<CommonController> logger;
 
-        public CommonController(ILogger<CommonController> logger, CountryService countryService, AppService appService)
+        public CommonController(ILogger<CommonController> log, CountryService cs, AppService asv)
         {
-            cs = countryService;
-            asv = appService;
+            countryService = cs;
+            appService = asv;
+            logger = log;
+        }
+
+        private void HandleError(Exception ex)
+        {
+            if (ex is BadHttpRequestException)
+            { }
+
+            else
+            {
+                logger.LogError(ex, ex.StackTrace);
+            }
         }
 
         [HttpGet("app/hospital-profile")]
         public async Task<List<HospitalProfile>> GetAppHospitalProfile()
         {
-            return await asv.FindAllAppHospitalProfileAsync();
+            try
+            {
+                return await appService.FindAllAppHospitalProfileAsync();
+            }
+            
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
         }
 
         [HttpGet("app/version")]
         public async Task<List<AppVersion>> GetAppVersion()
         {
-            return await asv.FindAllAppVersionAsync();
+            try
+            {
+                return await appService.FindAllAppVersionAsync();
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
         }
 
         [HttpGet("telcode/list")]
         public async Task<List<CountryTelCode>> GetCountriesTelCode()
         {
-            return await cs.FindAllCountryTelCodeAsync();
+            try
+            {
+                return await countryService.FindAllCountryTelCodeAsync();
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
         }
 
         [HttpGet("country/list")]
         public async Task<List<Country>> GetCountriesAsync()
         {
-            return await cs.FindAllCountriesAsync();
+            try
+            {
+                return await countryService.FindAllCountriesAsync();
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
         }
 
         [HttpGet("nationality/list")]
         public async Task<List<Nationality>> GetNationalities()
         {
-            return await cs.FindAllNationalitiesAsync();
+            try
+            {
+                return await countryService.FindAllNationalitiesAsync();
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
         }
     }
 }

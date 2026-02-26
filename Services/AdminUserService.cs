@@ -7,12 +7,10 @@ namespace vesalius_m.Services
     public class AdminUserService
     {
         private readonly DefaultConnection ctx;
-        private readonly ILogger<AdminUserService> logger;
 
-        public AdminUserService(DefaultConnection c, ILogger<AdminUserService> log)
+        public AdminUserService(DefaultConnection c)
         {
             ctx = c;
-            logger = log;
         }
 
         public async Task<AdminUser?> FindByAdminIdAsync(int adminId)
@@ -30,9 +28,8 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding admin user by adminId: {adminId}", adminId);
                 throw;
             }
         }
@@ -52,9 +49,8 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding admin user by username: {username}", username);
                 throw;
             }
         }
@@ -74,9 +70,21 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding admin user by email: {email}", email);
+                throw;
+            }
+        }
+
+        public bool ValidateCredentials(AdminUser user, string password)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, user.Password);
+            }
+
+            catch (Exception)
+            {
                 throw;
             }
         }

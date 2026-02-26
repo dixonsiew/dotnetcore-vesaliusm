@@ -5,7 +5,7 @@ namespace vesalius_m.Models
     public class ApplicationUser
     {
         [JsonPropertyName("user_id")]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public required string Username { get; set; }
         public required string Email { get; set; }
         public bool IsKidsExplorer { get; set; }
@@ -112,8 +112,8 @@ namespace vesalius_m.Models
                 MasterPrn = r.MASTER_PRN,
                 PlayerId = r.PLAYER_ID,
                 MachineId = r.MACHINE_ID,
-                RegisterDate = r.REGISTRATION_DATE_TIME,
-                RegisterDateExcel = r.REGISTRATION_DATE_TIME,
+                RegisterDate = r.REGISTRATION_DATE_TIME?.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                RegisterDateExcel = r.REGISTRATION_DATE_TIME?.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 Inactive = r.INACTIVE_FLAG,
                 SessionId = r.SESSION_ID,
                 SignInType = r.SIGN_IN_TYPE,

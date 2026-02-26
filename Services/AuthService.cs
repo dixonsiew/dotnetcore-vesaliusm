@@ -29,25 +29,29 @@ namespace vesalius_m.Services
                     valid = user != null && applicationUserService.ValidateCredentials(user, data.Password);
                 }
 
-                if (!valid)
+                if (!valid || user == null)
                 {
                     throw new UnauthorizedAccessException("Invalid Credentials");
                 }
 
                 if (data.PlayerId != null)
                 {
-
+                    await applicationUserService.UpdatePlayerIdAsync(data.PlayerId, user.UserId);
+                    await applicationUserService.InsertDownloadAppV2(data.MachineId ?? "", data.PlayerId);
                 }
 
                 if (data.MachineId != null)
                 {
-
+                    await applicationUserService.UpdateMachineIdAsync(data.MachineId, user.UserId);
                 }
 
-                if (user?.Inactive == "Y")
+                if (user.Inactive == "Y")
                 {
 
                 }
+
+                string sessionId = await applicationUserService.SaveSessionIdAsync(user.UserId);
+                user.SessionId = sessionId;
             }
 
             catch (Exception)

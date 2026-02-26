@@ -7,12 +7,10 @@ namespace vesalius_m.Services
     public class CountryService
     {
         private readonly DefaultConnection ctx;
-        private readonly ILogger<CountryService> logger;
 
-        public CountryService(DefaultConnection c, ILogger<CountryService> log)
+        public CountryService(DefaultConnection c)
         {
             ctx = c;
-            logger = log;
         }
 
         public async Task<List<CountryTelCode>> FindAllCountryTelCodeAsync()
@@ -25,9 +23,8 @@ namespace vesalius_m.Services
                 return lx;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all country tel codes");
                 throw;
             }
         }
@@ -43,9 +40,8 @@ namespace vesalius_m.Services
                 return s;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all country codes");
                 throw;
             }
         }
@@ -60,9 +56,8 @@ namespace vesalius_m.Services
                 return lx;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all countries");
                 throw;
             }
         }
@@ -77,9 +72,8 @@ namespace vesalius_m.Services
                 return lx;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all nationalities");
                 throw;
             }
         }

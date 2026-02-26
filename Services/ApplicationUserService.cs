@@ -7,15 +7,13 @@ namespace vesalius_m.Services
     public class ApplicationUserService
     {
         private readonly DefaultConnection ctx;
-        private readonly ILogger<ApplicationUserService> logger;
 
-        public ApplicationUserService(DefaultConnection c, ILogger<ApplicationUserService> log)
+        public ApplicationUserService(DefaultConnection c)
         {
             ctx = c;
-            logger = log;
         }
 
-        public async Task<ApplicationUser?> FindByUserIdAsync(int userId)
+        public async Task<ApplicationUser?> FindByUserIdAsync(long userId)
         {
             ApplicationUser? o = null;
             try
@@ -30,9 +28,8 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding application user by userId: {userId}", userId);
                 throw;
             }
         }
@@ -52,9 +49,8 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding application user by username: {username}", username);
                 throw;
             }
         }
@@ -74,9 +70,8 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding application user by email: {email}", email);
                 throw;
             }
         }
@@ -96,9 +91,96 @@ namespace vesalius_m.Services
                 return o;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding application user by prn: {prn}", prn);
+                throw;
+            }
+        }
+
+        public async Task<string> SaveSessionIdAsync(long userId)
+        {
+            try
+            {
+                string sid = string.Empty;
+                string sessionId = new UUID().ToFormattedString();
+                using var conn = ctx.CreateConnection();
+                await conn.ExecuteAsync(@"UPDATE APPLICATION_USER SET SESSION_ID = :sessionId WHERE USER_ID = :userId", new { sessionId, userId });
+                sid = sessionId;
+                return sid;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task UpdateMachineIdAsync(string id, long userId)
+        {
+            try
+            {
+                string machineId = BCrypt.Net.BCrypt.HashPassword(id);
+                using var conn = ctx.CreateConnection();
+                await conn.ExecuteAsync(@"UPDATE APPLICATION_USER SET MACHINE_ID = :machineId WHERE USER_ID = :userId", new { machineId, userId });
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task UpdatePlayerIdAsync(string id, long userId)
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                await conn.ExecuteAsync(@"UPDATE APPLICATION_USER SET PLAYER_ID = NULL WHERE PLAYER_ID = :id", new { id });
+                await conn.ExecuteAsync(@"UPDATE APPLICATION_USER SET PLAYER_ID = :id WHERE USER_ID = :userId", new { id, userId });
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task InsertDownloadApp(string playerId)
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                await conn.ExecuteAsync(@"
+                    MERGE INTO APP_DOWNLOADED_USER apu
+                    USING (SELECT :playerId AS PLAYER_ID FROM DUAL) src
+                    ON (apu.PLAYER_ID = src.PLAYER_ID)
+                    WHEN NOT MATCHED THEN
+                    INSERT (PLAYER_ID) VALUES (src.PLAYER_ID)", new { playerId });
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task InsertDownloadAppV2(string machineId, string playerId)
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                await conn.ExecuteAsync(@"
+                    MERGE INTO APP_DOWNLOADED_USER apu
+                    USING (SELECT :machineId AS MACHINE_ID, :playerId AS PLAYER_ID FROM DUAL) src
+                    ON (apu.MACHINE_ID = src.MACHINE_ID)
+                    WHEN MATCHED THEN
+                    UPDATE SET apu.PLAYER_ID = src.PLAYER_ID, DATE_UPDATE = CURRENT_TIMESTAMP
+                    WHEN NOT MATCHED THEN
+                    INSERT (MACHINE_ID, PLAYER_ID, DATE_UPDATE) VALUES (src.MACHINE_ID, src.PLAYER_ID, CURRENT_TIMESTAMP)", new { machineId, playerId });
+            }
+
+            catch (Exception)
+            {
                 throw;
             }
         }
@@ -110,12 +192,10 @@ namespace vesalius_m.Services
                 return BCrypt.Net.BCrypt.Verify(password, user.Password);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error validating credentials for user with userId: {UserId}", user.UserId);
+                throw;
             }
-
-            return false;
         }
     }
 }

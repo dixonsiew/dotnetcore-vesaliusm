@@ -7,12 +7,10 @@ namespace vesalius_m.Services
     public class AppService
     {
         private readonly DefaultConnection ctx;
-        private readonly ILogger<AppService> logger;
 
-        public AppService(DefaultConnection c, ILogger<AppService> log)
+        public AppService(DefaultConnection c)
         {
             ctx = c;
-            logger = log;
         }
 
         public async Task<List<HospitalProfile>> FindAllAppHospitalProfileAsync()
@@ -25,9 +23,8 @@ namespace vesalius_m.Services
                 return lx;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all hospital profiles");
                 throw;
             }
         }
@@ -42,9 +39,8 @@ namespace vesalius_m.Services
                 return lx;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error finding all app versions");
                 throw;
             }
         }
