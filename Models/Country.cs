@@ -8,12 +8,17 @@
 
         public static List<Country> List(IEnumerable<dynamic> q)
         {
-            return q.Select(o => new Country
+            return q.Select(FromRs).ToList();
+        }
+
+        public static Country FromRs(dynamic r)
+        {
+            return new Country
             {
-                CountryName = o.COUNTRY_NAME,
-                TelCode = o.TEL_CODE,
-                CountryCode = o.COUNTRY_CODE,
-            }).ToList();
+                CountryName = r.COUNTRY_NAME,
+                TelCode = r.TEL_CODE,
+                CountryCode = r.COUNTRY_CODE,
+            };
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System.Data;
 using vesalius_m.Models;
 using vesalius_m.Utils;
 
@@ -39,7 +38,7 @@ namespace vesalius_m.Services
             {
                 using var conn = ctx.CreateConnection();
                 var prm = new { nationality };
-                var q = await conn.ExecuteScalarAsync<string>(@"SELECT COUNTRY_CODE FROM NOVA_COUNTRY WHERE NATIONALITY = :nationality");
+                var q = await conn.ExecuteScalarAsync<string>(@"SELECT COUNTRY_CODE FROM NOVA_COUNTRY WHERE NATIONALITY = :nationality", prm);
                 var s = q ?? "";
                 return s;
             }

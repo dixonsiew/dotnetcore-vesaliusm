@@ -11,12 +11,17 @@ namespace vesalius_m.Models
 
         public static List<AppVersion> List(IEnumerable<dynamic> q)
         {
-            return q.Select(o => new AppVersion
+            return q.Select(FromRs).ToList();
+        }
+
+        public static AppVersion FromRs(dynamic r)
+        {
+            return new AppVersion
             {
-                LatestVersion = o.LATEST_VERSION,
-                OSPlatform = o.OS_PLATFORM,
-                Status = o.STATUS,
-            }).ToList();
+                LatestVersion = r.LATEST_VERSION,
+                OSPlatform = r.OS_PLATFORM,
+                Status = r.STATUS,
+            };
         }
     }
 }

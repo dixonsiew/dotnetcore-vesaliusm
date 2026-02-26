@@ -7,11 +7,16 @@
 
         public static List<HospitalProfile> List(IEnumerable<dynamic> q)
         {
-            return q.Select(o => new HospitalProfile
+            return q.Select(FromRs).ToList();
+        }
+
+        public static HospitalProfile FromRs(dynamic r)
+        {
+            return new HospitalProfile
             {
-                ProfileDesc = o.PROFILE_DESC,
-                ProfileValue = o.PROFILE_VALUE,
-            }).ToList();
+                ProfileDesc = r.PROFILE_DESC,
+                ProfileValue = r.PROFILE_VALUE,
+            };
         }
     }
 }

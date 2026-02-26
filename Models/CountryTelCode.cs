@@ -7,11 +7,16 @@
 
         public static List<CountryTelCode> List(IEnumerable<dynamic> q)
         {
-            return q.Select(o => new CountryTelCode
+            return q.Select(FromRs).ToList();
+        }
+
+        public static CountryTelCode FromRs(dynamic r)
+        {
+            return new CountryTelCode
             {
-                CountryName = o.COUNTRY_NAME,
-                TelCode = o.TEL_CODE,
-            }).ToList();
+                CountryName = r.COUNTRY_NAME,
+                TelCode = r.TEL_CODE,
+            };
         }
     }
 }

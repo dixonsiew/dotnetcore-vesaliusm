@@ -137,6 +137,11 @@ app.Run();
 
 void AddServices(IServiceCollection services)
 {
+    services.AddScoped<ApplicationUserService>();
+    services.AddScoped<AdminUserService>();
+    services.AddScoped<TokenService>();
+    services.AddScoped<TokenAdminService>();
+    services.AddScoped<AuthService>();
     services.AddScoped<AppService>();
     services.AddScoped<CountryService>();
 }
