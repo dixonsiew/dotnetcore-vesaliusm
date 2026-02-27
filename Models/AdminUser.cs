@@ -9,7 +9,7 @@ namespace vesalius_m.Models
         public required string Username { get; set; }
         public required string Email { get; set; }
         [JsonIgnore]
-        public required string Password { get; set; }
+        public string? Password { get; set; }
         public string? Title { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }

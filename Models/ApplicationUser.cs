@@ -10,7 +10,8 @@ namespace vesalius_m.Models
         public required string Email { get; set; }
         public bool IsKidsExplorer { get; set; }
         public bool IsGoldenPearl { get; set; }
-        public required string Password { get; set; }
+        [JsonIgnore]
+        public string? Password { get; set; }
         public string? Title { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }

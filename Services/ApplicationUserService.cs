@@ -13,6 +13,133 @@ namespace vesalius_m.Services
             ctx = c;
         }
 
+        public async Task<List<ApplicationUser>> FindAllAsync(int offset, int limit)
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                var q = await conn.QueryAsync(@"SELECT * FROM APPLICATION_USER WHERE INACTIVE_FLAG = 'N' ORDER BY REGISTRATION_DATE_TIME, MASTER_PRN OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY", new { offset, limit });
+                var lx = ApplicationUser.List(q);
+                return lx;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<PagedList<ApplicationUser>> ListAsync(int page, int limit)
+        {
+            try
+            {
+                var total = await CountAsync();
+                var pg = new Pager(total, page, limit);
+                var lx = await FindAllAsync(pg.LowerBound, pg.PageSize);
+                var m = new PagedList<ApplicationUser>
+                {
+                    List = lx,
+                    Total = total,
+                    TotalPages = pg.TotalPages,
+                };
+                return m;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> CountAsync()
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                int q = await conn.ExecuteScalarAsync<int>(@"SELECT COUNT(USER_ID) AS COUNT FROM APPLICATION_USER WHERE INACTIVE_FLAG = 'N'");
+                return q;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ApplicationUser>> FindAllActiveAsync(int offset, int limit)
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                var q = await conn.QueryAsync(@"SELECT * FROM APPLICATION_USER WHERE INACTIVE_FLAG = 'N' ORDER BY REGISTRATION_DATE_TIME, MASTER_PRN OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY", new { offset, limit });
+                var lx = ApplicationUser.List(q);
+                return lx;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<PagedList<ApplicationUser>> ListActiveAsync(int page, int limit)
+        {
+            try
+            {
+                var total = await CountAsync();
+                var pg = new Pager(total, page, limit);
+                var lx = await FindAllActiveAsync(pg.LowerBound, pg.PageSize);
+                var m = new PagedList<ApplicationUser>
+                {
+                    List = lx,
+                    Total = total,
+                    TotalPages = pg.TotalPages,
+                };
+                return m;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> CountActiveAsync()
+        {
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                int q = await conn.ExecuteScalarAsync<int>(@"SELECT COUNT(USER_ID) AS COUNT FROM APPLICATION_USER WHERE INACTIVE_FLAG = 'N'");
+                return q;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ApplicationUser?> FindByUserIdSessionId(long userId, string sessionId)
+        {
+            ApplicationUser? o = null;
+            try
+            {
+                using var conn = ctx.CreateConnection();
+                var q = await conn.QuerySingleOrDefaultAsync(@"SELECT * FROM APPLICATION_USER WHERE USER_ID = :userId AND SESSION_ID = :sessionId", new { userId, sessionId });
+                if (q != null)
+                {
+                    o = ApplicationUser.FromRs(q);
+                }
+
+                return o;
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<ApplicationUser?> FindByUserIdAsync(long userId)
         {
             ApplicationUser? o = null;

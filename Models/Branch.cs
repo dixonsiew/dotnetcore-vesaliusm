@@ -6,9 +6,9 @@ namespace vesalius_m.Models
     {
         public int BranchId { get; set; }
         [JsonIgnore]
-        public required string Url { get; set; }
+        public string? Url { get; set; }
         [JsonIgnore]
-        public required string Passcode { get; set; }
+        public string? Passcode { get; set; }
         public required string BranchName { get; set; }
 
         public static Branch FromRs(dynamic r)

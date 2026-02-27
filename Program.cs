@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
 using System.Text;
+using vesalius_m;
 using vesalius_m.Services;
 using vesalius_m.Utils;
 
@@ -50,7 +51,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
     });
-
+    c.OperationFilter<AuthorizationOperationFilter>();
 });
 builder.Services.AddScoped<DefaultConnection>();
 AddServices(builder.Services);
@@ -72,6 +73,14 @@ builder.Services.AddAuthentication(o =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""))
     };
 });
+
+//builder.Services.AddScoped<IAuthorizationHandler, SessionIdHandler>();
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("SessionId", policy =>
+//        policy.Requirements.Add(new SessionIdRequirement()));
+//});
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.WriteIndented = true;

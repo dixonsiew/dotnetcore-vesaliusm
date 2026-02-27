@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using vesalius_m.Models;
 using vesalius_m.Services;
+using vesalius_m.Utils;
 
 namespace vesalius_m.Controllers
 {
@@ -51,6 +52,40 @@ namespace vesalius_m.Controllers
             try
             {
                 return await appService.FindAllAppVersionAsync();
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
+        }
+
+        [HttpGet("service/guest/list")]
+        public async Task<List<AppServices>> GetGuestModeServices()
+        {
+            try
+            {
+                var m = await appService.ListByGuestMode();
+                Response.Headers.Append(Constants.X_TOTAL_COUNT, $"{m.Total}");
+                return m.List;
+            }
+
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                throw;
+            }
+        }
+
+        [HttpGet("service/auth/list")]
+        public async Task<List<AppServices>> GetAuthModeServices()
+        {
+            try
+            {
+                var m = await appService.ListByAuthMode();
+                Response.Headers.Append(Constants.X_TOTAL_COUNT, $"{m.Total}");
+                return m.List;
             }
 
             catch (Exception ex)
