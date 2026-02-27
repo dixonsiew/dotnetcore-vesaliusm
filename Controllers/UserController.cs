@@ -10,7 +10,7 @@ namespace vesalius_m.Controllers
     [Route("user")]
     [ApiController]
     [Authorize()]
-    [TypeFilter(typeof(SessionIdFilter))]
+    [SessionId()]
     public class UserController : ControllerBase
     {
         private readonly ApplicationUserService applicationUserService;

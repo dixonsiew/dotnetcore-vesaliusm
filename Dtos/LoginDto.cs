@@ -1,21 +1,25 @@
 ﻿namespace vesalius_m.Dtos
 {
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     public class LoginDto
     {
+        [DefaultValue("eugene.lim@nova-hub.com")]
         [Required(ErrorMessage = "Username is required")]
-        public string Username { get; init; } = "eugene.lim@nova-hub.com";
+        public required string Username { get; set; }
 
+        [DefaultValue("Abcd1234")]
         [Required(ErrorMessage = "Password is required")]
-        public string Password { get; init; } = "Abcd1234";
+        public required string Password { get; set; }
 
-        public string? PlayerId { get; init; }
+        public string? PlayerId { get; set; }
 
-        public string? MachineId { get; init; }
+        public string? MachineId { get; set; }
 
-        public bool FromAdmin { get; init; } = false;
+        [DefaultValue("false")]
+        public bool FromAdmin { get; set; }
 
-        public int FromBiometric { get; init; } = 0;
+        public int FromBiometric { get; set; }
     }
 }
